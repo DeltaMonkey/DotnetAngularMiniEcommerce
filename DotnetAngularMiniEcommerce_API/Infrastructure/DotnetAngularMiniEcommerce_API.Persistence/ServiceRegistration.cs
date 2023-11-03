@@ -1,5 +1,5 @@
-﻿using DotnetAngularMiniEcommerce_API.Application.Abstractions;
-using DotnetAngularMiniEcommerce_API.Persistence.Concretes;
+﻿using DotnetAngularMiniEcommerce_API.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotnetAngularMiniEcommerce_API.Persistence
@@ -8,7 +8,9 @@ namespace DotnetAngularMiniEcommerce_API.Persistence
     {
         public static void AddPersistanceServices(this IServiceCollection services)
         {
-            services.AddSingleton<IProductService, ProductService>();
+            services.AddDbContext<ECommerceDbContext>(options => {
+                options.UseNpgsql(Configuration.ConnectionString);
+            });
         }
     }
 }

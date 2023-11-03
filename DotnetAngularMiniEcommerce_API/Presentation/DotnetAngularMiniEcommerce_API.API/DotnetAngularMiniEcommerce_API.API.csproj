@@ -14,4 +14,8 @@
     <ProjectReference Include="..\..\Infrastructure\DotnetAngularMiniEcommerce_API.Persistence\DotnetAngularMiniEcommerce_API.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
