@@ -22,8 +22,4 @@
     <ProjectReference Include="..\..\Core\DotnetAngularMiniEcommerce_API.Application\DotnetAngularMiniEcommerce_API.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
