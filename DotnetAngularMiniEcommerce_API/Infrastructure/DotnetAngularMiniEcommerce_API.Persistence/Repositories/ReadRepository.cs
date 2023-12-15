@@ -23,6 +23,6 @@ namespace DotnetAngularMiniEcommerce_API.Persistence.Repositories
 
         public async Task<T> GetFirstAsync(Expression<Func<T, bool>> method) => await Table.FirstOrDefaultAsync(method);
 
-        public Task<T> GetByIdAsync(string id) => Table.FirstOrDefaultAsync(data => data.ID == Guid.Parse(id));
+        public async Task<T> GetByIdAsync(string id) => await Table.FindAsync(Guid.Parse(id));
     }
 }
