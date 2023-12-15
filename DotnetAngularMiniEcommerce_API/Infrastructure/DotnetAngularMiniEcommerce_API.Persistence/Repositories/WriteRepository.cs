@@ -15,7 +15,7 @@ namespace DotnetAngularMiniEcommerce_API.Persistence.Repositories
             _context = context;
         }
 
-        public DbSet<T> Table => throw new NotImplementedException();
+        public DbSet<T> Table => _context.Set<T>();
 
         public async Task<bool> AddAsync(T entity)
         {

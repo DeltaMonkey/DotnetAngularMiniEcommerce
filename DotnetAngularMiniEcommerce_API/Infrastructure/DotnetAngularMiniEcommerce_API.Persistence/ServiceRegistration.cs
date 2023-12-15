@@ -1,4 +1,6 @@
-﻿using DotnetAngularMiniEcommerce_API.Persistence.Contexts;
+﻿using DotnetAngularMiniEcommerce_API.Application.Repositories;
+using DotnetAngularMiniEcommerce_API.Persistence.Contexts;
+using DotnetAngularMiniEcommerce_API.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +13,13 @@ namespace DotnetAngularMiniEcommerce_API.Persistence
             services.AddDbContext<ECommerceDbContext>(options => {
                 options.UseNpgsql(Configuration.ConnectionString);
             });
+
+            services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
+            services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
+            services.AddScoped<IOrderReadRepository, OrderReadRepository>();
+            services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
+            services.AddScoped<IProductReadRepository, ProductReadRepository>();
+            services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
         }
     }
 }
