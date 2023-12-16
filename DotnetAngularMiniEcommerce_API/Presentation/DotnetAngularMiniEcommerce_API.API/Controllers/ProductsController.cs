@@ -1,5 +1,4 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Repositories;
-using DotnetAngularMiniEcommerce_API.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetAngularMiniEcommerce_API.API.Controllers
