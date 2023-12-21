@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
 import { AleritfyService, MessageType, Position } from 'src/app/services/admin/aleritfy.service';
 
 @Component({
@@ -6,9 +8,18 @@ import { AleritfyService, MessageType, Position } from 'src/app/services/admin/a
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
+export class DashboardComponent extends BaseComponent implements OnInit {
 
-  constructor(private alertify: AleritfyService) { }
+  constructor(
+    spinner: NgxSpinnerService,
+    private alertify: AleritfyService
+    ) { 
+    super(spinner);
+  }
+
+  ngOnInit(): void {
+    this.showSpinner(SpinnerType.BallSpinClockwiseFadeRotating);
+  }
 
   m() {
     this.alertify.message("merhaba", { 
