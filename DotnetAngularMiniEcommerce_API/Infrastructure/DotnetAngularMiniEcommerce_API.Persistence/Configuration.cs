@@ -2,7 +2,7 @@
 
 namespace DotnetAngularMiniEcommerce_API.Persistence
 {
-    static class Configuration
+    public static class Configuration
     {
         private static ConfigurationManager _configurationManager;
 
@@ -21,6 +21,14 @@ namespace DotnetAngularMiniEcommerce_API.Persistence
         public static string ConnectionString {
             get {
                 return ConfigurationManager.GetConnectionString("PostgreSQL");
+            }
+        }
+
+        public static List<string> CorsUrlList
+        {
+            get
+            {
+                return ConfigurationManager.GetSection("CorsUrlList").Get<List<string>>();
             }
         }
     }

@@ -41,7 +41,7 @@ namespace DotnetAngularMiniEcommerce_API.Persistence.Repositories
             return true;
         }
 
-        public async Task<bool> Remove(string id)
+        public async Task<bool> RemoveAsync(string id)
         {
             T entity = await Table.FirstOrDefaultAsync(data => data.ID == Guid.Parse(id));
             return Remove(entity);

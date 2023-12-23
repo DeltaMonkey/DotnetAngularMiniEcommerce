@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+declare var $: any;
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,12 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'DotnetAngularMiniEcommerce_UI';
   
-  constructor() { }
+  constructor() { 
+
+  }
 }
+
+
+//$.get("https://localhost:7240/api/Products").done((data) => {
+//  console.log(data);
+//})

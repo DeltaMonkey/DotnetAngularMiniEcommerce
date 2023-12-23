@@ -10,6 +10,10 @@ namespace DotnetAngularMiniEcommerce_API.API
 
             builder.Services.AddPersistanceServices();
 
+            builder.Services.AddCors(options => options.AddDefaultPolicy(policy => {
+                policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(Configuration.CorsUrlList.ToArray());
+            }));
+
             builder.Services.AddControllers();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -22,6 +26,8 @@ namespace DotnetAngularMiniEcommerce_API.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
 
