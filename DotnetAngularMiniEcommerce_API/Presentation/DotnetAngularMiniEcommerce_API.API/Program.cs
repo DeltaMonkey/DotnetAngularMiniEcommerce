@@ -1,4 +1,10 @@
+using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
+using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
+using DotnetAngularMiniEcommerce_API.Infrastructure.Filters;
 using DotnetAngularMiniEcommerce_API.Persistence;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using System;
 
 namespace DotnetAngularMiniEcommerce_API.API
 {
@@ -14,7 +20,9 @@ namespace DotnetAngularMiniEcommerce_API.API
                 policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(Configuration.CorsUrlList.ToArray());
             }));
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
+                .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>())
+                .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

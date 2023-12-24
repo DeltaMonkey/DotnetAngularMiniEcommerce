@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\DotnetAngularMiniEcommerce_API.Infrastructure\DotnetAngularMiniEcommerce_API.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\DotnetAngularMiniEcommerce_API.Persistence\DotnetAngularMiniEcommerce_API.Persistence.csproj" />
   </ItemGroup>
 

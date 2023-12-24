@@ -1,7 +1,10 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Repositories;
+using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
 using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
 using DotnetAngularMiniEcommerce_API.Domain.Entities;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 
 namespace DotnetAngularMiniEcommerce_API.API.Controllers
@@ -10,14 +13,17 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
+        private readonly CreateProductValidator _createProductValidator;
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IProductReadRepository _productReadRepository;
 
         public ProductsController(
+            CreateProductValidator createProductValidator,
             IProductWriteRepository productWriteRepository,
             IProductReadRepository productReadRepository
             )
         {
+            _createProductValidator = createProductValidator;
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
         }
