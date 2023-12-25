@@ -31,7 +31,14 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get() 
         {
-            return Ok(_productReadRepository.GetAll(false));
+            return Ok(_productReadRepository.GetAll(false).Select(p => new { 
+                p.ID,
+                p.Name,
+                p.Stock,
+                p.Price,
+                p.CreatedDate,
+                p.UpdatedDate
+            }));
         }
 
         [HttpGet("{id}")]
