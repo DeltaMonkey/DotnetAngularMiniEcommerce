@@ -1,10 +1,12 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Repositories;
+using DotnetAngularMiniEcommerce_API.Application.Requestparameters;
 using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
 using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
 using DotnetAngularMiniEcommerce_API.Domain.Entities;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace DotnetAngularMiniEcommerce_API.API.Controllers
@@ -29,16 +31,26 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get() 
+        public async Task<IActionResult> Get([FromQuery]Pagination pagination) 
         {
-            return Ok(_productReadRepository.GetAll(false).Select(p => new { 
+            var totalCount = _productReadRepository.GetAll(false).Count();
+            var products = _productReadRepository.GetAll(false)
+                .Skip(pagination.Page * pagination.Size)
+                .Take(pagination.Size)
+                .Select(p => new
+            {
                 p.ID,
                 p.Name,
                 p.Stock,
                 p.Price,
                 p.CreatedDate,
                 p.UpdatedDate
-            }));
+            });
+
+            return Ok(new {
+                totalCount,
+                products 
+            });
         }
 
         [HttpGet("{id}")]

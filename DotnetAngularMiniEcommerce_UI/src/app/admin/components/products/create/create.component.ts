@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
 import { Create_Product } from 'src/app/contracts/create_product';
@@ -12,6 +12,8 @@ import { ProductService } from 'src/app/services/common/models/product.service';
 })
 export class CreateComponent extends BaseComponent{
   
+  @Output() createdProduct: EventEmitter<Create_Product> = new EventEmitter();
+
   constructor(
     ngxSpinnerService: NgxSpinnerService,
     private productService: ProductService,
@@ -29,24 +31,6 @@ export class CreateComponent extends BaseComponent{
     create_product.stock = parseInt(stock.value);
     create_product.price = parseFloat(price.value);
 
-    if(!name.value) {
-      this.alertifyService.message("Lütfen ürün adını giriniz!", {
-        dismissOthers: true,
-        messageType: MessageType.Error,
-        position: Position.TopRight
-      });
-      return;
-    }
-
-    if(parseInt(stock.value) < 0) {
-      this.alertifyService.message("Lütfen stok bilginisi doğru giriniz!", {
-        dismissOthers: true,
-        messageType: MessageType.Error,
-        position: Position.TopRight
-      });
-      return;
-    }
-
     this.productService.create(
       create_product, 
       () => { 
@@ -56,6 +40,7 @@ export class CreateComponent extends BaseComponent{
           messageType: MessageType.Success,
           position: Position.TopRight
         });
+        this.createdProduct.emit(create_product);
       },
       (errorMessage) => {
         this.alertifyService.message(errorMessage, {
