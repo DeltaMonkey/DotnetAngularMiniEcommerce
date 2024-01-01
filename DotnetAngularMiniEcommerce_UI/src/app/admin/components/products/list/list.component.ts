@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, _MatTableDataSource } from '@angular/material/table';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -14,7 +14,7 @@ import { ProductService } from 'src/app/services/common/models/product.service';
 })
 export class ListComponent extends BaseComponent implements OnInit {
 
-  displayedColumns: string[] = ['Name', 'Stock', 'Price', 'CreatedDate', 'UpdatedDate'];
+  displayedColumns: string[] = ['Name', 'Stock', 'Price', 'CreatedDate', 'UpdatedDate', 'Edit', 'Delete'];
   dataSource: MatTableDataSource<List_Product> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -52,4 +52,9 @@ export class ListComponent extends BaseComponent implements OnInit {
   async pageChanged(): Promise<void> {
     await this.getProducts();
   }
+
+  //delete(id, event: MouseEvent) {
+  //  const elem = event.target;
+  //  $(elem).parent().parent().fadeOut(2000);
+  //}
 }
