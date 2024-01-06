@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Directive, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
@@ -5,7 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerType } from 'src/app/base/base.component';
 import { DeleteDialogComponent, DeleteState } from 'src/app/dialogs/delete-dialog/delete-dialog.component';
 import { AleritfyService, MessageType } from 'src/app/services/admin/aleritfy.service';
-import { ProductService } from 'src/app/services/common/models/product.service';
+import { HttpClientService } from 'src/app/services/common/http-client.service';
 declare var $: any;
 
 @Directive({
@@ -14,12 +15,13 @@ declare var $: any;
 export class DeleteDirective implements OnInit {
 
   @Input() id: string;
+  @Input() controller: string;
   @Output() callback: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private element: ElementRef,
     private _renderer: Renderer2,
-    private productService: ProductService,
+    private httpClientService: HttpClientService,
     private viewContainerRef: ViewContainerRef,
     private alertify: AleritfyService,
     private spinner: NgxSpinnerService,
@@ -40,23 +42,28 @@ export class DeleteDirective implements OnInit {
     this.openDialog(async () => {
       this.spinner.show(SpinnerType.BallClimbingDot);
       const td: HTMLTableElement = this.element.nativeElement;
-      this.productService.delete(this.id).then(
-        () => {
-          $(td).parent().animate({
-            opacity: 0,
-            left: "+=50",
-            height: "toogle"
-          }, 700, () => {
-            this.callback.emit();
-          });
-        },
-      ).catch((reason: any) => {
-          this.alertify.message(`An error occured: ${reason}` , {
-            messageType: MessageType.Error
-          });
-          this.spinner.hide(SpinnerType.BallClimbingDot);
-        }
-      );
+      this.httpClientService.delete({
+        controller: this.controller
+      }, this.id).subscribe({
+          next: (result) => {
+            $(td).parent().animate({
+              opacity: 0,
+              left: "+=50",
+              height: "toogle"
+            }, 700, () => {
+              this.callback.emit();
+              this.alertify.message("Item deleted sucessfully." , {
+                messageType: MessageType.Success
+              });
+            })
+          },
+          error: (errorResponse: HttpErrorResponse) => {
+            this.alertify.message(`An error occured: ${errorResponse.message}` , {
+              messageType: MessageType.Error
+            });
+            this.spinner.hide(SpinnerType.BallClimbingDot);
+          }
+      });
     })
   }
 

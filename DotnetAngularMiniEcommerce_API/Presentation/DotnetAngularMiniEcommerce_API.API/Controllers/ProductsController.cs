@@ -18,16 +18,19 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         private readonly CreateProductValidator _createProductValidator;
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IProductReadRepository _productReadRepository;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public ProductsController(
             CreateProductValidator createProductValidator,
             IProductWriteRepository productWriteRepository,
-            IProductReadRepository productReadRepository
+            IProductReadRepository productReadRepository,
+            IWebHostEnvironment webHostEnvironment
             )
         {
             _createProductValidator = createProductValidator;
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -93,6 +96,34 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         {
             await _productWriteRepository.RemoveAsync(id);
             await _productWriteRepository.SaveAsync();
+            return Ok();
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Upload() {
+            try
+            {
+                //wwwroot/resource/product-images
+                string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "resources/product-images");
+
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                var files = Request.Form.Files;
+
+                foreach (IFormFile file in files)
+                {
+                    Guid fileName = Guid.NewGuid();
+                    string fullPath = Path.Combine(uploadPath, $"{fileName.ToString()}{Path.GetExtension(file.FileName)}");
+                    using FileStream fileStream = new (fullPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite, 1024 * 1024, useAsync: false);
+                    await file.CopyToAsync(fileStream);
+                    await fileStream.FlushAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex);
+            }
             return Ok();
         }
     }

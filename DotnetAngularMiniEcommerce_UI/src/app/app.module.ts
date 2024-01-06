@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -24,7 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   providers: [
-    { provide: "baseUrl", useValue: "https://localhost:7240/api", multi: true}
+    { provide: "baseUrl", useValue: "http://localhost:5297/api", multi: true}
   ],
   bootstrap: [AppComponent]
 })

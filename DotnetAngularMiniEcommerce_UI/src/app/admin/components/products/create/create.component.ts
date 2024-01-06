@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
 import { Create_Product } from 'src/app/contracts/create_product';
 import { AleritfyService, MessageType, Position } from 'src/app/services/admin/aleritfy.service';
+import { FileUploadOptions } from 'src/app/services/common/file-upload/file-upload.component';
 import { ProductService } from 'src/app/services/common/models/product.service';
 
 @Component({
@@ -13,6 +14,13 @@ import { ProductService } from 'src/app/services/common/models/product.service';
 export class CreateComponent extends BaseComponent{
   
   @Output() createdProduct: EventEmitter<Create_Product> = new EventEmitter();
+  @Output() fileUploadOption: Partial<FileUploadOptions> = {
+    action: "upload",
+    controller: "products",
+    explanation: "Resimleri sürükleyin veya seçin...",
+    isAdminPage: true,
+    accept: ".png, .jpg, jpeg"
+  };
 
   constructor(
     ngxSpinnerService: NgxSpinnerService,
@@ -35,7 +43,7 @@ export class CreateComponent extends BaseComponent{
       create_product, 
       () => { 
         this.hideSpinner(SpinnerType.BallClimbingDot);
-        this.alertifyService.message("Ürün başarıyla eklenmiştir.", {
+        this.alertifyService.message("Item created successfully.", {
           dismissOthers: true,
           messageType: MessageType.Success,
           position: Position.TopRight

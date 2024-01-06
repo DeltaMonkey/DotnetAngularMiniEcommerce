@@ -4,6 +4,7 @@ using DotnetAngularMiniEcommerce_API.Infrastructure.Filters;
 using DotnetAngularMiniEcommerce_API.Persistence;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http.Features;
 using System;
 
 namespace DotnetAngularMiniEcommerce_API.API
@@ -27,6 +28,13 @@ namespace DotnetAngularMiniEcommerce_API.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.Configure<FormOptions>(o =>
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -35,9 +43,11 @@ namespace DotnetAngularMiniEcommerce_API.API
                 app.UseSwaggerUI();
             }
 
+            app.UseStaticFiles();
+
             app.UseCors();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 

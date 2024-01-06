@@ -52,9 +52,4 @@ export class ListComponent extends BaseComponent implements OnInit {
   async pageChanged(): Promise<void> {
     await this.getProducts();
   }
-
-  //delete(id, event: MouseEvent) {
-  //  const elem = event.target;
-  //  $(elem).parent().parent().fadeOut(2000);
-  //}
 }
