@@ -12,8 +12,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { DeleteDirective } from 'src/app/directives/admin/delete.directive';
-import { MatDialogModule } from '@angular/material/dialog';
 import { FileUploadModule } from 'src/app/services/common/file-upload/file-upload.module';
+import { DialogModule } from 'src/app/dialogs/dialog.module';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,7 @@ import { FileUploadModule } from 'src/app/services/common/file-upload/file-uploa
     MatTableModule,
     MatPaginatorModule,
     MatIconModule,
-    MatDialogModule,
+    DialogModule,
     FileUploadModule
   ]
 })
