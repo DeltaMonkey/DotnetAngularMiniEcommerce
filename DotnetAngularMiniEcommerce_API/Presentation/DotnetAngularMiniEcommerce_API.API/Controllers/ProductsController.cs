@@ -1,5 +1,6 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Repositories;
 using DotnetAngularMiniEcommerce_API.Application.Requestparameters;
+using DotnetAngularMiniEcommerce_API.Application.Services;
 using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
 using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
 using DotnetAngularMiniEcommerce_API.Domain.Entities;
@@ -19,18 +20,20 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IProductReadRepository _productReadRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IFileService _fileService;
 
         public ProductsController(
             CreateProductValidator createProductValidator,
             IProductWriteRepository productWriteRepository,
             IProductReadRepository productReadRepository,
-            IWebHostEnvironment webHostEnvironment
-            )
+            IWebHostEnvironment webHostEnvironment,
+            IFileService fileService)
         {
             _createProductValidator = createProductValidator;
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
             _webHostEnvironment = webHostEnvironment;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -101,29 +104,8 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Upload() {
-            try
-            {
-                //wwwroot/resource/product-images
-                string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "resources/product-images");
-
-                if (!Directory.Exists(uploadPath))
-                    Directory.CreateDirectory(uploadPath);
-
-                var files = Request.Form.Files;
-
-                foreach (IFormFile file in files)
-                {
-                    Guid fileName = Guid.NewGuid();
-                    string fullPath = Path.Combine(uploadPath, $"{fileName.ToString()}{Path.GetExtension(file.FileName)}");
-                    using FileStream fileStream = new (fullPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite, 1024 * 1024, useAsync: false);
-                    await file.CopyToAsync(fileStream);
-                    await fileStream.FlushAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex);
-            }
+            var files = Request.Form.Files;
+            await _fileService.UploadAsync("resources/product-images", files);
             return Ok();
         }
     }

@@ -1,5 +1,6 @@
 using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
 using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
+using DotnetAngularMiniEcommerce_API.Infrastructure;
 using DotnetAngularMiniEcommerce_API.Infrastructure.Filters;
 using DotnetAngularMiniEcommerce_API.Persistence;
 using FluentValidation;
@@ -16,6 +17,7 @@ namespace DotnetAngularMiniEcommerce_API.API
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddPersistanceServices();
+            builder.Services.AddInfrastructureService();
 
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy => {
                 policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(Configuration.CorsUrlList.ToArray());
