@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FileUploadComponent } from 'src/app/services/common/file-upload/file-upload.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { DialogModule } from 'src/app/dialogs/dialog.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { DialogModule } from 'src/app/dialogs/dialog.module';
   imports: [
     CommonModule,
     NgxFileDropModule,
-    DialogModule
+    DialogModule,
+    NgxSpinnerModule
   ],
   exports: [
     FileUploadComponent

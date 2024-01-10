@@ -6,24 +6,29 @@ import { AleritfyService, MessageType, Position } from '../../admin/aleritfy.ser
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from '../../ui/custom-toastr.service';
 import { DialogService } from '../dialog.service';
 import { FileUploadDialogComponent, FileUploadDialogState } from 'src/app/dialogs/file-upload-dialog/file-upload-dialog.component';
+import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss']
 })
-export class FileUploadComponent {
+export class FileUploadComponent extends BaseComponent {
 
   public files: NgxFileDropEntry[] = [];
 
   @Input() options: Partial<FileUploadOptions>;
 
   constructor(
+    spinner: NgxSpinnerService,
     private httpClientService: HttpClientService,
     private alertify: AleritfyService,
     private toastr: CustomToastrService,
     private dialogService: DialogService
-  ) {}
+  ) {
+    super(spinner)
+  }
 
   public filesSelected(files: NgxFileDropEntry[]) {
     this.files = files;
@@ -37,6 +42,7 @@ export class FileUploadComponent {
     
     this.dialogService.openDialog({ 
       afterClosed: async () => {
+        this.showSpinner(SpinnerType.BallSpinClockwiseFadeRotating)
         this.httpClientService.post({
           controller: this.options.controller,
           action: this.options.action,
@@ -76,6 +82,9 @@ export class FileUploadComponent {
                 position: ToastrPosition.TopRight
               });
             }
+          },
+          complete: () => {
+            this.hideSpinner(SpinnerType.BallSpinClockwiseFadeRotating)
           }
         })
       },

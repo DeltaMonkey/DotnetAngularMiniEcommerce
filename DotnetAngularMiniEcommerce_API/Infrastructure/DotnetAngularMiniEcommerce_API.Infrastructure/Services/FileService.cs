@@ -29,9 +29,8 @@ namespace DotnetAngularMiniEcommerce_API.Infrastructure.Services
             {
                 string fileNewName = await FileRenameAsync(uploadPath, file.FileName);
 
-                var finalUploadPath = $"{uploadPath}\\{fileNewName}";
-                bool result = await CopyFileAsync(finalUploadPath, file);
-                datas.Add((fileNewName, finalUploadPath));
+                bool result = await CopyFileAsync($"{uploadPath}\\{fileNewName}", file);
+                datas.Add((fileNewName, $"{path}\\{fileNewName}"));
                 results.Add(result);
             }
 

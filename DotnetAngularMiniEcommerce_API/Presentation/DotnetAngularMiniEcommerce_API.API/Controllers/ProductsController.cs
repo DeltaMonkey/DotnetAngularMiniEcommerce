@@ -21,19 +21,38 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         private readonly IProductReadRepository _productReadRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IFileService _fileService;
+        private readonly IFileWriteRepository _fileWriteRepository;
+        private readonly IFileReadRepository _fileReadRepository;
+        private readonly IProductImageFileWriteRepository _productImageFileWriteRepository;
+        private readonly IProductImageFileReadRepository _productImageFileReadRepository;
+        private readonly IInvoiceFileWriteRepository _invoiceFileWriteRepository;
+        private readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
 
         public ProductsController(
             CreateProductValidator createProductValidator,
             IProductWriteRepository productWriteRepository,
             IProductReadRepository productReadRepository,
             IWebHostEnvironment webHostEnvironment,
-            IFileService fileService)
+            IFileService fileService,
+            IFileWriteRepository fileWriteRepository,
+            IFileReadRepository fileReadRepository,
+            IProductImageFileWriteRepository productImageFileWriteRepository,
+            IProductImageFileReadRepository productImageFileReadRepository,
+            IInvoiceFileWriteRepository invoiceFileWriteRepository,
+            IInvoiceFileReadRepository invoiceFileReadRepository
+            )
         {
             _createProductValidator = createProductValidator;
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
             _webHostEnvironment = webHostEnvironment;
             _fileService = fileService;
+            _fileWriteRepository = fileWriteRepository;
+            _fileReadRepository = fileReadRepository;
+            _productImageFileWriteRepository = productImageFileWriteRepository;
+            _productImageFileReadRepository = productImageFileReadRepository;
+            _invoiceFileWriteRepository = invoiceFileWriteRepository;
+            _invoiceFileReadRepository = invoiceFileReadRepository;
         }
 
         [HttpGet]
@@ -105,7 +124,12 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Upload() {
             var files = Request.Form.Files;
-            await _fileService.UploadAsync("resources/product-images", files);
+            var datas = await _fileService.UploadAsync("resources/product-images", files);
+            await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile() {
+                FileName = d.fileName,
+                Path = d.path
+            }).ToList());
+            await _productImageFileWriteRepository.SaveAsync();
             return Ok();
         }
     }
