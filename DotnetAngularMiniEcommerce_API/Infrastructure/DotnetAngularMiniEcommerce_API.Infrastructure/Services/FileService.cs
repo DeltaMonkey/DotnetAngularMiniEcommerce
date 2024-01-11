@@ -1,11 +1,10 @@
-﻿using DotnetAngularMiniEcommerce_API.Application.Services;
-using DotnetAngularMiniEcommerce_API.Infrastructure.Operations;
+﻿using DotnetAngularMiniEcommerce_API.Infrastructure.Operations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
 namespace DotnetAngularMiniEcommerce_API.Infrastructure.Services
 {
-    public class FileService : IFileService
+    public class FileService
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
 

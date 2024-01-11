@@ -1,12 +1,10 @@
 using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
-using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
 using DotnetAngularMiniEcommerce_API.Infrastructure;
+using DotnetAngularMiniEcommerce_API.Infrastructure.Enums;
 using DotnetAngularMiniEcommerce_API.Infrastructure.Filters;
 using DotnetAngularMiniEcommerce_API.Persistence;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Features;
-using System;
 
 namespace DotnetAngularMiniEcommerce_API.API
 {
@@ -18,6 +16,8 @@ namespace DotnetAngularMiniEcommerce_API.API
 
             builder.Services.AddPersistanceServices();
             builder.Services.AddInfrastructureService();
+            builder.Services.AddStorage(StorageType.Local);
+            //builder.Services.AddStorage<LocalStorage>();
 
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy => {
                 policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(Configuration.CorsUrlList.ToArray());

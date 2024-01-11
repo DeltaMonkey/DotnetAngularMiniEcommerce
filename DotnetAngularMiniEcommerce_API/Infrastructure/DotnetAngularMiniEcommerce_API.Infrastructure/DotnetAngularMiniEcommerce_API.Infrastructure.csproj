@@ -14,4 +14,9 @@
 		<ProjectReference Include="..\..\Core\DotnetAngularMiniEcommerce_API.Application\DotnetAngularMiniEcommerce_API.Application.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Services\Storage\AWS\" />
+	  <Folder Include="Services\Storage\Azure\" />
+	</ItemGroup>
+
 </Project>

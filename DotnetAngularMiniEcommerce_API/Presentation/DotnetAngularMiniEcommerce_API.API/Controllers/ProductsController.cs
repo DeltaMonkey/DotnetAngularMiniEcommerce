@@ -1,13 +1,11 @@
-﻿using DotnetAngularMiniEcommerce_API.Application.Repositories;
+﻿using DotnetAngularMiniEcommerce_API.Application.Abstractions.Storage;
+using DotnetAngularMiniEcommerce_API.Application.Repositories;
 using DotnetAngularMiniEcommerce_API.Application.Requestparameters;
-using DotnetAngularMiniEcommerce_API.Application.Services;
 using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
 using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
 using DotnetAngularMiniEcommerce_API.Domain.Entities;
-using FluentValidation.Results;
+using DotnetAngularMiniEcommerce_API.Infrastructure.Services.Storage;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 using System.Net;
 
 namespace DotnetAngularMiniEcommerce_API.API.Controllers
@@ -20,39 +18,39 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IProductReadRepository _productReadRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IFileService _fileService;
         private readonly IFileWriteRepository _fileWriteRepository;
         private readonly IFileReadRepository _fileReadRepository;
         private readonly IProductImageFileWriteRepository _productImageFileWriteRepository;
         private readonly IProductImageFileReadRepository _productImageFileReadRepository;
         private readonly IInvoiceFileWriteRepository _invoiceFileWriteRepository;
         private readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
+        private readonly IStorageService _storageService;
 
         public ProductsController(
             CreateProductValidator createProductValidator,
             IProductWriteRepository productWriteRepository,
             IProductReadRepository productReadRepository,
             IWebHostEnvironment webHostEnvironment,
-            IFileService fileService,
             IFileWriteRepository fileWriteRepository,
             IFileReadRepository fileReadRepository,
             IProductImageFileWriteRepository productImageFileWriteRepository,
             IProductImageFileReadRepository productImageFileReadRepository,
             IInvoiceFileWriteRepository invoiceFileWriteRepository,
-            IInvoiceFileReadRepository invoiceFileReadRepository
+            IInvoiceFileReadRepository invoiceFileReadRepository,
+            IStorageService storageService
             )
         {
             _createProductValidator = createProductValidator;
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
             _webHostEnvironment = webHostEnvironment;
-            _fileService = fileService;
             _fileWriteRepository = fileWriteRepository;
             _fileReadRepository = fileReadRepository;
             _productImageFileWriteRepository = productImageFileWriteRepository;
             _productImageFileReadRepository = productImageFileReadRepository;
             _invoiceFileWriteRepository = invoiceFileWriteRepository;
             _invoiceFileReadRepository = invoiceFileReadRepository;
+            _storageService = storageService;
         }
 
         [HttpGet]
@@ -124,12 +122,16 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Upload() {
             var files = Request.Form.Files;
-            var datas = await _fileService.UploadAsync("resources/product-images", files);
+            
+            var datas = await _storageService.UploadAsync("resources/product-images", files);
             await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile() {
                 FileName = d.fileName,
-                Path = d.path
+                Path = d.pathOrContainerName,
+                Storage = _storageService.StorageName
             }).ToList());
+            
             await _productImageFileWriteRepository.SaveAsync();
+
             return Ok();
         }
     }
