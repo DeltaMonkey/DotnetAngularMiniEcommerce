@@ -1,6 +1,7 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Abstractions.Storage;
 using DotnetAngularMiniEcommerce_API.Infrastructure.Enums;
 using DotnetAngularMiniEcommerce_API.Infrastructure.Services.Storage;
+using DotnetAngularMiniEcommerce_API.Infrastructure.Services.Storage.Azure;
 using DotnetAngularMiniEcommerce_API.Infrastructure.Services.Storage.Local;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,7 @@ namespace DotnetAngularMiniEcommerce_API.Infrastructure
             services.AddScoped<IStorageService, StorageService>();
         }
 
-        public static void AddStorage<T>(this IServiceCollection services) where T : class, IStorage {
+        public static void AddStorage<T>(this IServiceCollection services) where T : Storage, IStorage {
             services.AddScoped<IStorage, T>();
         }
 
@@ -24,7 +25,7 @@ namespace DotnetAngularMiniEcommerce_API.Infrastructure
                     services.AddScoped<IStorage, LocalStorage>();
                     break;
                 case StorageType.Azure:
-                    services.AddScoped<IStorage, LocalStorage>();
+                    services.AddScoped<IStorage, AzureStorage>();
                     break;
                 case StorageType.AWS:
                     services.AddScoped<IStorage, LocalStorage>();

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace DotnetAngularMiniEcommerce_API.Infrastructure.Services.Storage.Local
 {
-    public class LocalStorage : ILocalStorage
+    public class LocalStorage : Storage, ILocalStorage
     {
 
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -35,10 +35,10 @@ namespace DotnetAngularMiniEcommerce_API.Infrastructure.Services.Storage.Local
             List<(string fileName, string path)> datas = new List<(string fileName, string pathOrContainerName)>();
             foreach (IFormFile file in files)
             {
-                //string fileNewName = await FileRenameAsync(uploadPath, file.FileName);
+                string fileNewName = await FileRenameAsync(uploadPath, file.FileName, HasFile);
 
-                bool result = await CopyFileAsync($"{uploadPath}\\{file.Name}", file);
-                datas.Add((file.Name, $"{path}\\{file.Name}"));
+                bool result = await CopyFileAsync($"{uploadPath}\\{fileNewName}", file);
+                datas.Add((fileNewName, $"{path}\\{fileNewName}"));
             }
 
             return datas;

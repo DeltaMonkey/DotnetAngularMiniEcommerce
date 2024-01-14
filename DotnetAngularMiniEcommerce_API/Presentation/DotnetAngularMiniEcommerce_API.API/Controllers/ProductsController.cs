@@ -123,7 +123,7 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         public async Task<IActionResult> Upload() {
             var files = Request.Form.Files;
             
-            var datas = await _storageService.UploadAsync("resources/product-images", files);
+            var datas = await _storageService.UploadAsync("files", files);
             await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile() {
                 FileName = d.fileName,
                 Path = d.pathOrContainerName,
