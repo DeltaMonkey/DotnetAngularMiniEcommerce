@@ -14,13 +14,6 @@ import { ProductService } from 'src/app/services/common/models/product.service';
 export class CreateComponent extends BaseComponent{
   
   @Output() createdProduct: EventEmitter<Create_Product> = new EventEmitter();
-  @Output() fileUploadOption: Partial<FileUploadOptions> = {
-    action: "upload",
-    controller: "products",
-    explanation: "Resimleri sürükleyin veya seçin...",
-    isAdminPage: true,
-    accept: ".png, .jpg, jpeg"
-  };
 
   constructor(
     ngxSpinnerService: NgxSpinnerService,

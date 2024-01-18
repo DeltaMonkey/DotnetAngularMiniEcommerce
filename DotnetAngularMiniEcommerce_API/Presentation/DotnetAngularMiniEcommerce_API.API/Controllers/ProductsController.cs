@@ -4,8 +4,8 @@ using DotnetAngularMiniEcommerce_API.Application.Requestparameters;
 using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
 using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
 using DotnetAngularMiniEcommerce_API.Domain.Entities;
-using DotnetAngularMiniEcommerce_API.Infrastructure.Services.Storage;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace DotnetAngularMiniEcommerce_API.API.Controllers
@@ -25,6 +25,7 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         private readonly IInvoiceFileWriteRepository _invoiceFileWriteRepository;
         private readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
         private readonly IStorageService _storageService;
+        private readonly IConfiguration _configuration;
 
         public ProductsController(
             CreateProductValidator createProductValidator,
@@ -37,7 +38,8 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
             IProductImageFileReadRepository productImageFileReadRepository,
             IInvoiceFileWriteRepository invoiceFileWriteRepository,
             IInvoiceFileReadRepository invoiceFileReadRepository,
-            IStorageService storageService
+            IStorageService storageService,
+            IConfiguration configuration
             )
         {
             _createProductValidator = createProductValidator;
@@ -51,28 +53,29 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
             _invoiceFileWriteRepository = invoiceFileWriteRepository;
             _invoiceFileReadRepository = invoiceFileReadRepository;
             _storageService = storageService;
+            _configuration = configuration;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]Pagination pagination) 
+        public async Task<IActionResult> Get([FromQuery] Pagination pagination)
         {
             var totalCount = _productReadRepository.GetAll(false).Count();
             var products = _productReadRepository.GetAll(false)
                 .Skip(pagination.Page * pagination.Size)
                 .Take(pagination.Size)
                 .Select(p => new
-            {
-                p.ID,
-                p.Name,
-                p.Stock,
-                p.Price,
-                p.CreatedDate,
-                p.UpdatedDate
-            });
+                {
+                    p.ID,
+                    p.Name,
+                    p.Stock,
+                    p.Price,
+                    p.CreatedDate,
+                    p.UpdatedDate
+                });
 
             return Ok(new {
                 totalCount,
-                products 
+                products
             });
         }
 
@@ -101,7 +104,7 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         public async Task<IActionResult> Put(VM_Update_Product model)
         {
             Product product = await _productReadRepository.GetByIdAsync(model.ID);
-            
+
             product.Name = model.Name;
             product.Price = model.Price;
             product.Stock = model.Stock;
@@ -120,18 +123,45 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Upload() {
+        public async Task<IActionResult> Upload(string id) {
             var files = Request.Form.Files;
-            
-            var datas = await _storageService.UploadAsync("files", files);
-            await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile() {
-                FileName = d.fileName,
-                Path = d.pathOrContainerName,
-                Storage = _storageService.StorageName
+
+            var product = await _productReadRepository.GetByIdAsync(id);
+
+            List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("photo-images", files);
+            await _productImageFileWriteRepository.AddRangeAsync(result.Select(q => new ProductImageFile {
+                FileName = q.fileName,
+                Path = q.pathOrContainerName,
+                Storage = _storageService.StorageName,
+                Products = new List<Product>() { product }
             }).ToList());
-            
+
             await _productImageFileWriteRepository.SaveAsync();
 
+            return Ok();
+        }
+
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetProductImages(string id) {
+            //eager loading
+            Product? product = await _productReadRepository.Table.Include(p => p.ProductImageFiles).FirstOrDefaultAsync(p => p.ID == Guid.Parse(id));
+
+            return Ok(product.ProductImageFiles.Select(p => new {
+                Path = $"{_configuration["BaseStorageUrl"]}/{p.Path}",
+                p.FileName,
+                p.ID
+            }));
+        }
+
+        [HttpDelete("[action]/{id}")]
+        public async Task<IActionResult> DeleteProductImage(string id, string ImageId)
+        {
+            Product? product = await _productReadRepository.Table.Include(p => p.ProductImageFiles)
+                .FirstOrDefaultAsync(p => p.ID == Guid.Parse(id));
+
+            ProductImageFile? productImageFile = product.ProductImageFiles.FirstOrDefault(p => p.ID == Guid.Parse(ImageId));
+            product.ProductImageFiles.Remove(productImageFile);
+            await _productWriteRepository.SaveAsync();
             return Ok();
         }
     }

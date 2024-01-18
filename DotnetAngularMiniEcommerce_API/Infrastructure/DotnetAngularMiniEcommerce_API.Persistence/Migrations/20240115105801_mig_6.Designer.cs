@@ -3,6 +3,7 @@ using System;
 using DotnetAngularMiniEcommerce_API.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotnetAngularMiniEcommerce_API.Persistence.Migrations
 {
     [DbContext(typeof(ECommerceDbContext))]
-    partial class ECommerceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240115105801_mig_6")]
+    partial class mig_6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,21 +149,6 @@ namespace DotnetAngularMiniEcommerce_API.Persistence.Migrations
                     b.ToTable("OrderProduct");
                 });
 
-            modelBuilder.Entity("ProductProductImageFile", b =>
-                {
-                    b.Property<Guid>("ProductImageFilesID")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProductsID")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ProductImageFilesID", "ProductsID");
-
-                    b.HasIndex("ProductsID");
-
-                    b.ToTable("ProductProductImageFile");
-                });
-
             modelBuilder.Entity("DotnetAngularMiniEcommerce_API.Domain.Entities.InvoiceFile", b =>
                 {
                     b.HasBaseType("DotnetAngularMiniEcommerce_API.Domain.Entities.File");
@@ -175,6 +162,11 @@ namespace DotnetAngularMiniEcommerce_API.Persistence.Migrations
             modelBuilder.Entity("DotnetAngularMiniEcommerce_API.Domain.Entities.ProductImageFile", b =>
                 {
                     b.HasBaseType("DotnetAngularMiniEcommerce_API.Domain.Entities.File");
+
+                    b.Property<Guid>("ProductID")
+                        .HasColumnType("uuid");
+
+                    b.HasIndex("ProductID");
 
                     b.HasDiscriminator().HasValue("ProductImageFile");
                 });
@@ -205,24 +197,25 @@ namespace DotnetAngularMiniEcommerce_API.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProductProductImageFile", b =>
+            modelBuilder.Entity("DotnetAngularMiniEcommerce_API.Domain.Entities.ProductImageFile", b =>
                 {
-                    b.HasOne("DotnetAngularMiniEcommerce_API.Domain.Entities.ProductImageFile", null)
-                        .WithMany()
-                        .HasForeignKey("ProductImageFilesID")
+                    b.HasOne("DotnetAngularMiniEcommerce_API.Domain.Entities.Product", "Product")
+                        .WithMany("ProductImageFiles")
+                        .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DotnetAngularMiniEcommerce_API.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("DotnetAngularMiniEcommerce_API.Domain.Entities.Customer", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("DotnetAngularMiniEcommerce_API.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("ProductImageFiles");
                 });
 #pragma warning restore 612, 618
         }

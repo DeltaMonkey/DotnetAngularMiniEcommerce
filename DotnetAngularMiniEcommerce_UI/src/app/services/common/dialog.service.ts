@@ -15,6 +15,8 @@ export class DialogService {
       width: dialogParameters.options?.widht,
       height: dialogParameters.options?.height,
       position: dialogParameters.options?.position,
+      maxWidth: dialogParameters.options?.maxWidth,
+      maxHeight: dialogParameters.options?.maxHeight
     });
 
     dialogRef.afterClosed().subscribe(async result => {
@@ -34,6 +36,8 @@ export class DialogParameters<DialogComponentType> {
 
 export class DialogOptions {
   widht?: string;
-  height?: string; 
+  height?: string;
+  maxWidth?: string;
+  maxHeight?: string;
   position?: DialogPosition;
 }
