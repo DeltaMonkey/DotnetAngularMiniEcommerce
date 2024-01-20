@@ -1,3 +1,4 @@
+using DotnetAngularMiniEcommerce_API.Application;
 using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
 using DotnetAngularMiniEcommerce_API.Infrastructure;
 using DotnetAngularMiniEcommerce_API.Infrastructure.Enums;
@@ -17,6 +18,8 @@ namespace DotnetAngularMiniEcommerce_API.API
 
             builder.Services.AddPersistanceServices();
             builder.Services.AddInfrastructureService();
+            builder.Services.AddApplicationService();
+
             //builder.Services.AddStorage(StorageType.Local);
             builder.Services.AddStorage<AzureStorage>();
 

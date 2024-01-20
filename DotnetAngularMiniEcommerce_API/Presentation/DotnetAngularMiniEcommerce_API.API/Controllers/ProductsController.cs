@@ -1,9 +1,12 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Abstractions.Storage;
+using DotnetAngularMiniEcommerce_API.Application.Features.Commands.CreateProduct;
+using DotnetAngularMiniEcommerce_API.Application.Features.Queries.GetAllProduct;
 using DotnetAngularMiniEcommerce_API.Application.Repositories;
 using DotnetAngularMiniEcommerce_API.Application.Requestparameters;
 using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
 using DotnetAngularMiniEcommerce_API.Application.ViewModels.Products;
 using DotnetAngularMiniEcommerce_API.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -27,6 +30,8 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         private readonly IStorageService _storageService;
         private readonly IConfiguration _configuration;
 
+        private readonly IMediator _mediator;
+
         public ProductsController(
             CreateProductValidator createProductValidator,
             IProductWriteRepository productWriteRepository,
@@ -39,7 +44,9 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
             IInvoiceFileWriteRepository invoiceFileWriteRepository,
             IInvoiceFileReadRepository invoiceFileReadRepository,
             IStorageService storageService,
-            IConfiguration configuration
+            IConfiguration configuration,
+
+            IMediator mediator
             )
         {
             _createProductValidator = createProductValidator;
@@ -54,29 +61,15 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
             _invoiceFileReadRepository = invoiceFileReadRepository;
             _storageService = storageService;
             _configuration = configuration;
+
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] Pagination pagination)
+        public async Task<IActionResult> Get([FromQuery] GetAllProductQueryRequest getAllProductQueryRequest)
         {
-            var totalCount = _productReadRepository.GetAll(false).Count();
-            var products = _productReadRepository.GetAll(false)
-                .Skip(pagination.Page * pagination.Size)
-                .Take(pagination.Size)
-                .Select(p => new
-                {
-                    p.ID,
-                    p.Name,
-                    p.Stock,
-                    p.Price,
-                    p.CreatedDate,
-                    p.UpdatedDate
-                });
-
-            return Ok(new {
-                totalCount,
-                products
-            });
+            GetAllProductQueryResponse response = await _mediator.Send(getAllProductQueryRequest);
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -86,17 +79,9 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(VM_Create_Product model)
+        public async Task<IActionResult> Post(CreateProductCommandRequest createProductCommandRequest)
         {
-            Product product = new Product
-            {
-                Name = model.Name,
-                Price = model.Price,
-                Stock = model.Stock
-            };
-
-            await _productWriteRepository.AddAsync(product);
-            await _productWriteRepository.SaveAsync();
+            CreateProductCommandResponse response = await _mediator.Send(createProductCommandRequest);
             return StatusCode((int)HttpStatusCode.Created);
         }
 

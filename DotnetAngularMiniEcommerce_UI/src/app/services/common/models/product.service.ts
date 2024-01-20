@@ -37,7 +37,7 @@ export class ProductService {
   async read(page: number = 0, size: number = 5, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void): Promise<{ totalCount: number; products: List_Product[]; }> {
     const observable$ : Observable<{ totalCount: number; products: List_Product[]; }> = this.httpClientService.get<{ totalCount: number; products: List_Product[]; }>({ 
       controller: "products",
-      queryString: `page=${page}&size=${size}`
+      queryString: `Pagination.page=${page}&Pagination.size=${size}`
     });
     const promiseData = lastValueFrom(observable$);
 
