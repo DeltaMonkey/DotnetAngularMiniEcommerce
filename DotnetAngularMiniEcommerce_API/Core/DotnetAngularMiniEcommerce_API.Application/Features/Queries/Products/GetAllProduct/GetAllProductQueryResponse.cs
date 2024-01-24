@@ -1,4 +1,4 @@
-﻿namespace DotnetAngularMiniEcommerce_API.Application.Features.Queries.GetAllProduct
+﻿namespace DotnetAngularMiniEcommerce_API.Application.Features.Queries.Products.GetAllProduct
 {
     public class GetAllProductQueryResponse
     {

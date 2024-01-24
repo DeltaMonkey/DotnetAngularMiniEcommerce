@@ -1,8 +1,7 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Repositories;
-using DotnetAngularMiniEcommerce_API.Application.Requestparameters;
 using MediatR;
 
-namespace DotnetAngularMiniEcommerce_API.Application.Features.Queries.GetAllProduct
+namespace DotnetAngularMiniEcommerce_API.Application.Features.Queries.Products.GetAllProduct
 {
     public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQueryRequest, GetAllProductQueryResponse>
     {

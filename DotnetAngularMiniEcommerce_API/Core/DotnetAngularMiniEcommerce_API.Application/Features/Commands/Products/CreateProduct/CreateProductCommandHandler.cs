@@ -2,7 +2,7 @@
 using DotnetAngularMiniEcommerce_API.Domain.Entities;
 using MediatR;
 
-namespace DotnetAngularMiniEcommerce_API.Application.Features.Commands.CreateProduct
+namespace DotnetAngularMiniEcommerce_API.Application.Features.Commands.Products.CreateProduct
 {
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommandRequest, CreateProductCommandResponse>
     {
