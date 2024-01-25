@@ -1,10 +1,12 @@
 ﻿using DotnetAngularMiniEcommerce_API.Domain.Entities;
 using DotnetAngularMiniEcommerce_API.Domain.Entities.Common;
+using DotnetAngularMiniEcommerce_API.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotnetAngularMiniEcommerce_API.Persistence.Contexts
 {
-    public class ECommerceDbContext : DbContext
+    public class ECommerceDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
         public ECommerceDbContext(DbContextOptions options) : base(options)
         {

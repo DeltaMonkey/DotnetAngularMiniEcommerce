@@ -1,5 +1,4 @@
-﻿using DotnetAngularMiniEcommerce_API.Application.Abstractions.Storage;
-using DotnetAngularMiniEcommerce_API.Application.Features.Commands.ProductImageFiles.RemoveProductImage;
+﻿using DotnetAngularMiniEcommerce_API.Application.Features.Commands.ProductImageFiles.RemoveProductImage;
 using DotnetAngularMiniEcommerce_API.Application.Features.Commands.ProductImageFiles.UploadProductImage;
 using DotnetAngularMiniEcommerce_API.Application.Features.Commands.Products.CreateProduct;
 using DotnetAngularMiniEcommerce_API.Application.Features.Commands.Products.RemoveProduct;
@@ -7,12 +6,8 @@ using DotnetAngularMiniEcommerce_API.Application.Features.Commands.Products.Upda
 using DotnetAngularMiniEcommerce_API.Application.Features.Queries.ProductImageFiles.GetProductImages;
 using DotnetAngularMiniEcommerce_API.Application.Features.Queries.Products.GetAllProduct;
 using DotnetAngularMiniEcommerce_API.Application.Features.Queries.Products.GetByIdProduct;
-using DotnetAngularMiniEcommerce_API.Application.Repositories;
-using DotnetAngularMiniEcommerce_API.Application.Validators.Products;
-using DotnetAngularMiniEcommerce_API.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace DotnetAngularMiniEcommerce_API.API.Controllers
@@ -21,51 +16,10 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly CreateProductValidator _createProductValidator;
-        private readonly IProductWriteRepository _productWriteRepository;
-        private readonly IProductReadRepository _productReadRepository;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IFileWriteRepository _fileWriteRepository;
-        private readonly IFileReadRepository _fileReadRepository;
-        private readonly IProductImageFileWriteRepository _productImageFileWriteRepository;
-        private readonly IProductImageFileReadRepository _productImageFileReadRepository;
-        private readonly IInvoiceFileWriteRepository _invoiceFileWriteRepository;
-        private readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
-        private readonly IStorageService _storageService;
-        private readonly IConfiguration _configuration;
-
         private readonly IMediator _mediator;
 
-        public ProductsController(
-            CreateProductValidator createProductValidator,
-            IProductWriteRepository productWriteRepository,
-            IProductReadRepository productReadRepository,
-            IWebHostEnvironment webHostEnvironment,
-            IFileWriteRepository fileWriteRepository,
-            IFileReadRepository fileReadRepository,
-            IProductImageFileWriteRepository productImageFileWriteRepository,
-            IProductImageFileReadRepository productImageFileReadRepository,
-            IInvoiceFileWriteRepository invoiceFileWriteRepository,
-            IInvoiceFileReadRepository invoiceFileReadRepository,
-            IStorageService storageService,
-            IConfiguration configuration,
-
-            IMediator mediator
-            )
+        public ProductsController(IMediator mediator)
         {
-            _createProductValidator = createProductValidator;
-            _productWriteRepository = productWriteRepository;
-            _productReadRepository = productReadRepository;
-            _webHostEnvironment = webHostEnvironment;
-            _fileWriteRepository = fileWriteRepository;
-            _fileReadRepository = fileReadRepository;
-            _productImageFileWriteRepository = productImageFileWriteRepository;
-            _productImageFileReadRepository = productImageFileReadRepository;
-            _invoiceFileWriteRepository = invoiceFileWriteRepository;
-            _invoiceFileReadRepository = invoiceFileReadRepository;
-            _storageService = storageService;
-            _configuration = configuration;
-
             _mediator = mediator;
         }
 
@@ -105,14 +59,16 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Upload([FromQuery] UploadProductImageCommandRequest uploadProductImageCommandRequest) {
+        public async Task<IActionResult> Upload([FromQuery] UploadProductImageCommandRequest uploadProductImageCommandRequest) 
+        {
             uploadProductImageCommandRequest.Files = Request.Form.Files;
             UploadProductImageCommandResponse response = await _mediator.Send(uploadProductImageCommandRequest);
             return Ok();
         }
 
         [HttpGet("[action]/{id}")]
-        public async Task<IActionResult> GetProductImages([FromRoute] GetProductImagesQueryRequest getProductImagesQueryRequest) {
+        public async Task<IActionResult> GetProductImages([FromRoute] GetProductImagesQueryRequest getProductImagesQueryRequest) 
+        {
             List<GetProductImagesQueryResponse> response = await _mediator.Send(getProductImagesQueryRequest);
             return Ok(response);
         }

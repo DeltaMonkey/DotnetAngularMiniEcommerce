@@ -19,4 +19,8 @@
     <ProjectReference Include="..\DotnetAngularMiniEcommerce_API.Domain\DotnetAngularMiniEcommerce_API.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Queries\AppUsers\" />
+  </ItemGroup>
+
 </Project>
