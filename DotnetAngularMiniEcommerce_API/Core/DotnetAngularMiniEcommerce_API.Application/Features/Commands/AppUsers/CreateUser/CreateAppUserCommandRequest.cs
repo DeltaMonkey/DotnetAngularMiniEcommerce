@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace DotnetAngularMiniEcommerce_API.Application.Features.Commands.AppUsers
+namespace DotnetAngularMiniEcommerce_API.Application.Features.Commands.AppUsers.CreateUser
 {
     public class CreateAppUserCommandRequest : IRequest<CreateAppUserCommandResponse>
     {

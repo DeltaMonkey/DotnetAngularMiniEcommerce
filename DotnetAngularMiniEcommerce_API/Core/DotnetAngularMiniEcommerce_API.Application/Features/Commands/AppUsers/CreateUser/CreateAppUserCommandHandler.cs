@@ -3,7 +3,7 @@ using DotnetAngularMiniEcommerce_API.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace DotnetAngularMiniEcommerce_API.Application.Features.Commands.AppUsers
+namespace DotnetAngularMiniEcommerce_API.Application.Features.Commands.AppUsers.CreateUser
 {
     public class CreateAppUserCommandHandler : IRequestHandler<CreateAppUserCommandRequest, CreateAppUserCommandResponse>
     {
