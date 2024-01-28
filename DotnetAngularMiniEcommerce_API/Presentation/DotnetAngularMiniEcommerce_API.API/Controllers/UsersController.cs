@@ -1,7 +1,9 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Features.Commands.AppUsers.CreateUser;
 using DotnetAngularMiniEcommerce_API.Application.Features.Commands.AppUsers.LoginUser;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace DotnetAngularMiniEcommerce_API.API.Controllers
 {

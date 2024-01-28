@@ -6,7 +6,10 @@ using DotnetAngularMiniEcommerce_API.Infrastructure.Filters;
 using DotnetAngularMiniEcommerce_API.Infrastructure.Services.Storage.Azure;
 using DotnetAngularMiniEcommerce_API.Persistence;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DotnetAngularMiniEcommerce_API.API
 {
@@ -34,6 +37,20 @@ namespace DotnetAngularMiniEcommerce_API.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer("Admin", options => {
+                options.TokenValidationParameters = new()
+                {
+                    ValidateAudience = true, // Olusuturulacak token degerini kimlerin/hangi originlerin/sitelerin kullanacagini belirttigimiz degerdir www.bilememne.com
+                    ValidateIssuer = true, // Olusturulacak token degerini kimin dagittigini ifade edecegimiz alandir. www.exampleapi.com
+                    ValidateLifetime = true, // Olusturulan token degerinin suresini kontrol edecek olan dogrulamadir
+                    ValidateIssuerSigningKey = true, // Uretilecek token degerinin uygulamamiza ait bir deger oldugunu ifade eden security key verisinin dogrulamasidir
+
+                    ValidAudience = builder.Configuration["Token:Audience"],
+                    ValidIssuer = builder.Configuration["Token:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
+                };
+            });
+
             builder.Services.Configure<FormOptions>(o =>
             {
                 o.ValueLengthLimit = int.MaxValue;
@@ -55,6 +72,7 @@ namespace DotnetAngularMiniEcommerce_API.API
 
             //app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

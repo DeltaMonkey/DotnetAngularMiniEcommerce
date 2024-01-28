@@ -7,6 +7,7 @@ using DotnetAngularMiniEcommerce_API.Application.Features.Queries.ProductImageFi
 using DotnetAngularMiniEcommerce_API.Application.Features.Queries.Products.GetAllProduct;
 using DotnetAngularMiniEcommerce_API.Application.Features.Queries.Products.GetByIdProduct;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -14,6 +15,7 @@ namespace DotnetAngularMiniEcommerce_API.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public class ProductsController : ControllerBase
     {
         private readonly IMediator _mediator;
