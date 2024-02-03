@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace DotnetAngularMiniEcommerce_API.Application.Features.Commands.AppUsers.CreateUser
+﻿namespace DotnetAngularMiniEcommerce_API.Application.DTOs.Users
 {
-    public class CreateAppUserCommandRequest : IRequest<CreateAppUserCommandResponse>
+    public class CreateUserDto
     {
         public string NameSurname { get; set; }
         public string UserName { get; set; }

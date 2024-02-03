@@ -1,7 +1,9 @@
-﻿using DotnetAngularMiniEcommerce_API.Application.Repositories;
+﻿using DotnetAngularMiniEcommerce_API.Application.Abstractions.Services;
+using DotnetAngularMiniEcommerce_API.Application.Repositories;
 using DotnetAngularMiniEcommerce_API.Domain.Entities.Identity;
 using DotnetAngularMiniEcommerce_API.Persistence.Contexts;
 using DotnetAngularMiniEcommerce_API.Persistence.Repositories;
+using DotnetAngularMiniEcommerce_API.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,6 +39,9 @@ namespace DotnetAngularMiniEcommerce_API.Persistence
             services.AddScoped<IInvoiceFileWriteRepository, InvoiceFileWriteRepository>();
             services.AddScoped<IFileReadRepository, FileReadRepository>();
             services.AddScoped<IFileWriteRepository, FileWriteRepository>();
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
         }
     }
 }

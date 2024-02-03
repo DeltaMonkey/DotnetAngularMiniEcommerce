@@ -23,8 +23,6 @@ export class ProductsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.showSpinner(SpinnerType.BallSpinClockwiseFadeRotating);
-
     //this.httpClientService.get<Create_Product[]>({ 
     //  controller: "products"
     //}).subscribe(data => console.log(data[0].name));

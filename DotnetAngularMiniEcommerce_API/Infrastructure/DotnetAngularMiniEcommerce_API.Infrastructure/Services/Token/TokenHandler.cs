@@ -16,7 +16,7 @@ namespace DotnetAngularMiniEcommerce_API.Infrastructure.Services.Token
             _configuration = configuration;
         }
 
-        public TokenDto CreateAccessToken(int minute)
+        public TokenDto CreateAccessToken(int second)
         {
             TokenDto tokenDto = new TokenDto();
 
@@ -27,7 +27,7 @@ namespace DotnetAngularMiniEcommerce_API.Infrastructure.Services.Token
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             // Olusturulmus token ayarlarini veriyoruz
-            tokenDto.Expiration = DateTime.UtcNow.AddMinutes(minute);
+            tokenDto.Expiration = DateTime.UtcNow.AddSeconds(second);
 
             JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
                 audience: _configuration["Token:Audience"],
