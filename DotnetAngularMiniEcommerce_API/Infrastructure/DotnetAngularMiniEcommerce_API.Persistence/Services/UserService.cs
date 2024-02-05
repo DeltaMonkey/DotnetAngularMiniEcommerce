@@ -1,8 +1,7 @@
 ﻿using DotnetAngularMiniEcommerce_API.Application.Abstractions.Services;
 using DotnetAngularMiniEcommerce_API.Application.DTOs.Users;
-using DotnetAngularMiniEcommerce_API.Application.Features.Commands.AppUsers.CreateUser;
+using DotnetAngularMiniEcommerce_API.Application.Exceptions;
 using DotnetAngularMiniEcommerce_API.Domain.Entities.Identity;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace DotnetAngularMiniEcommerce_API.Persistence.Services
@@ -35,6 +34,18 @@ namespace DotnetAngularMiniEcommerce_API.Persistence.Services
                     response.Message = $"{error.Code} - {error.Description}<br>";
 
             return response;
+        }
+
+        public async Task UpdateRefreshToken(string refreshToken, DateTime accessTokenDate, int refreshTokenLifeTimeSecond, AppUser user)
+        {
+            if (user != null)
+            { 
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenEndDate = accessTokenDate.AddSeconds(refreshTokenLifeTimeSecond);
+                await _userManager.UpdateAsync(user);
+                return;
+            }
+            throw new NotFoundUserException();
         }
     }
 }

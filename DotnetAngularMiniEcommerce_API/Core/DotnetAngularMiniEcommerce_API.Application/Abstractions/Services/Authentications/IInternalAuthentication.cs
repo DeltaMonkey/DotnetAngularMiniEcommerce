@@ -5,5 +5,6 @@ namespace DotnetAngularMiniEcommerce_API.Application.Abstractions.Services.Authe
     public interface IInternalAuthentication
     {
         Task<TokenDto> LoginAsync(string userNameOrEmail, string password, int accessTokenLifetime);
+        Task<TokenDto> RefreshLoginAsync(string refreshToken, int accessTokenLifetime);
     }
 }

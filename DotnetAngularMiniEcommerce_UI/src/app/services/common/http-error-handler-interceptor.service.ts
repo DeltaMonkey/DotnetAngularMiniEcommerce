@@ -2,22 +2,29 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } 
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from '../ui/custom-toastr.service';
+import { UserAuthService } from './models/user-auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpErrorHandlerInterceptorService implements HttpInterceptor {
 
-  constructor(private toasterService: CustomToastrService) { }
+  constructor(
+    private userAuthService: UserAuthService,
+    private toasterService: CustomToastrService
+  ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(catchError(error => {
-      debugger;
       switch(error.status) {
         case HttpStatusCode.Unauthorized:
           this.toasterService.message("You don't have been authorized to this request.", "Unauthorized!", {
             messageType: ToastrMessageType.Error,
             position: ToastrPosition.BottomFullWidth
+          });
+
+          this.userAuthService.refreshTokenLogin(localStorage.getItem('refreshToken')).then(data => {
+            
           });
         break;
         case HttpStatusCode.InternalServerError:

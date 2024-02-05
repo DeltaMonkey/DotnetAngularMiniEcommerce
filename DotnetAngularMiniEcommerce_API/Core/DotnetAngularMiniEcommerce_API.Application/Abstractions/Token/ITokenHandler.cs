@@ -5,5 +5,6 @@ namespace DotnetAngularMiniEcommerce_API.Application.Abstractions.Token
     public interface ITokenHandler
     {
         TokenDto CreateAccessToken(int second);
+        string CreateRefreshToken();
     }
 }

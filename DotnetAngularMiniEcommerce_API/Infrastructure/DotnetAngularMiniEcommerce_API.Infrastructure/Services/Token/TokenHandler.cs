@@ -3,6 +3,7 @@ using DotnetAngularMiniEcommerce_API.Application.DTOs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace DotnetAngularMiniEcommerce_API.Infrastructure.Services.Token
@@ -41,7 +42,17 @@ namespace DotnetAngularMiniEcommerce_API.Infrastructure.Services.Token
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             tokenDto.AccessToken = tokenHandler.WriteToken(jwtSecurityToken);
 
+            tokenDto.RefreshToken = CreateRefreshToken();
+
             return tokenDto;
+        }
+
+        public string CreateRefreshToken()
+        {
+            byte[] number = new byte[32];
+            using RandomNumberGenerator random = RandomNumberGenerator.Create();
+            random.GetBytes(number);
+            return Convert.ToBase64String(number);
         }
     }
 }

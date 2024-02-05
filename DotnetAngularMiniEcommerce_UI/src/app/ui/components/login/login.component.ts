@@ -30,6 +30,7 @@ export class LoginComponent extends BaseComponent{
       if(tokenResponse)
       {
         localStorage.setItem("accessToken", tokenResponse.tokenDto.accessToken);
+        localStorage.setItem("refreshToken", tokenResponse.tokenDto.refreshToken);
 
         this.toasterService.message("Logged in successfully", "Welcome", {
           messageType: ToastrMessageType.Success,
